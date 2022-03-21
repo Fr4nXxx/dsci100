@@ -179,7 +179,7 @@ mnist_conf_mat <- mnist_predictions %>%
 ```r
 credit_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = tune()) %>% 
        set_engine("kknn") %>%
-       set_mode("regression")
+       set_mode("regression") # we are doing a regression here instead of a classification!!
 
 credit_recipe <- recipe(Balance ~ ., data = credit_training) %>%
        step_scale(all_predictors()) %>%
@@ -195,9 +195,32 @@ gridvals <- tibble(neighbors = seq(from = 1, to = 20)) # use k from a 1 to 20
 
 credit_results <- credit_workflow %>%
     tune_grid(resamples = credit_vfold, grid = gridvals) %>%
-    collect_metrics()
-
+    collect_metrics() 
+```
+Up to this step, it is very similar compared to how we do a classification! The main difference is that we are using the "regression" mode of in our specification instead of classification.
+```
 credit_min <- credit_results %>%
     filter(.metric == "rmse") %>%
-    filter (mean == min(mean))
+    filter (mean == min(mean)) 
+
+k_min <- credit_min %>%
+    pull(neighbors) # up to this step, we managed to choose the ideal # of neighbors that we are going to use for the regression as k_min
+
+credit_best_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k_min) %>%
+          set_engine("kknn") %>%
+          set_mode("regression") # build the specification, notice that we use "regression" instead of "classification"
+
+credit_best_fit <- workflow() %>%
+          add_recipe(credit_recipe) %>%
+          add_model(credit_best_spec) %>%
+          fit(data = credit_training) # fit our data onto the training set in order to figure out the slope and intercept.
+
+credit_summary <- credit_best_fit %>%
+           predict(credit_testing) %>%
+           bind_cols(credit_testing) %>%
+           metrics(truth = Balance, estimate = .pred) # use our model obtained from the training set onto the testing set, thereby obtaining the RMSPE
+
+knn_rmspe <- credit_summary %>%
+    filter(.metric == "rmse") %>%
+    pull(.estimate)
 ```
