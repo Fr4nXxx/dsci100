@@ -33,7 +33,7 @@ fruit_recipe <- recipe(fruit_name ~ mass + color_score, data = fruit_train) %>%
 **Model specification:**
 almost always the same for K-nn analysis:
 ```r
-knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x ) %>% #neighbors = tune() for vfold
+knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x) %>% #neighbors = tune() for vfold
        set_engine("kknn") %>%
        set_mode("classification")
 ```
@@ -53,6 +53,10 @@ In general it is very similar to a K-nn classification where we use known # of n
 ```r
 number_vfold <- vfold_cv(training_set, v = 5, strata = y) # perform  x-fold cross-validation, x = v
 
+knn_tune <- nearest_neighbor(weight_func = "rectangular", neighbors = tune()) %>%
+       set_engine("kknn") %>%
+       set_mode("classification"
+       
 knn_results <- workflow() %>%
        add_recipe(number_recipe) %>%
        add_model(knn_tune) %>%
