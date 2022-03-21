@@ -4,7 +4,7 @@
 The idea is to measure the distance between the points we want to predict and the points that we already know.
 -> Measure using the geometric distance
 
-```
+```r
 distance <- sqrt((xa - xb)^2 + (ya - yb)^2)
 
 or
@@ -24,7 +24,7 @@ dist_cancer_two_rows <- cancer  %>%
 
 **Recipe:**
 As seen below, recipe is used when describing how we want to do the prediction. We first have to specify what is the variable we want to predict and the predictors we are using, and then select the data (usually the training set).
-```
+```r
 fruit_recipe <- recipe(fruit_name ~ mass + color_score, data = fruit_train) %>%
     step_scale(all_predictors()) %>%
     step_center(all_predictors())
@@ -32,7 +32,7 @@ fruit_recipe <- recipe(fruit_name ~ mass + color_score, data = fruit_train) %>%
 
 **Model specification:**
 almost always the same for K-nn analysis:
-```
+```r
 knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x ) %>% #neighbors = tune() for vfold
        set_engine("kknn") %>%
        set_mode("classification")
@@ -40,7 +40,7 @@ knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x ) %>% #n
 
 **Training the classifier:**
 This is done through the function ``` workflow() ```
-```
+```r
 fruit_fit <- workflow() %>%
        add_recipe(fruit_recipe) %>%
        add_model(knn_spec) %>%
