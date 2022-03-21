@@ -1,7 +1,6 @@
 # DSCI 100
 
 **Classification:**
-
 The idea is to measure the distance between the points we want to predict and the points that we already know.
 -> Measure using the geometric distance
 
@@ -39,6 +38,8 @@ knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x ) %>% #n
        set_mode("classification")
 ```
 
+**Training the classifier:**
+This is done through the function ``` workflow() ```
 
 
 
