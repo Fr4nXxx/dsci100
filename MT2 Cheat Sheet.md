@@ -57,7 +57,7 @@ knn_results <- workflow() %>%
        add_recipe(number_recipe) %>%
        add_model(knn_tune) %>%
        tune_grid(resamples = number_vfold, grid = 10) %>% # additional step compared to normal K-nn
-       collect_metrics() # collect the results for the tuning process, and determing which k value we shall use
+       collect_metrics() # collect the results for the tuning process, and determine which k value we shall use
 accuracies <- knn_results %>% 
         filter(.metric == "accuracy") %>%
         filter(mean == max(mean)) <p># to figure out which one is the most ideal model</p>
