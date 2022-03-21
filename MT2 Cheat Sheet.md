@@ -48,6 +48,9 @@ fruit_fit <- workflow() %>%
 ```
 Note that the data set in ```fit()``` is the training set. The testing set comes into play in predict()
 
+**Tuning:**
+In general it is very similar to a K-nn classification where we use 
+
 
 
 # Individual fn's
