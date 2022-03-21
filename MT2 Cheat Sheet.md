@@ -50,7 +50,7 @@ Note that the data set in ```fit()``` is the training set. The testing set comes
 
 **Tuning:**
 In general it is very similar to a K-nn classification where we use known # of neighbors. A chunk of code is included with the difference commented.
-```
+```r
 number_vfold <- vfold_cv(training_set, v = 5, strata = y) # perform  x-fold cross-validation, x = v
 
 knn_results <- workflow() %>%
@@ -60,7 +60,7 @@ knn_results <- workflow() %>%
        collect_metrics() # collect the results for the tuning process, and determine which k value we shall use
 accuracies <- knn_results %>% 
         filter(.metric == "accuracy") %>%
-        filter(mean == max(mean)) <p># to figure out which one is the most ideal model</p>
+        filter(mean == max(mean)) # to figure out which one is the most ideal model
 ```
 
 
