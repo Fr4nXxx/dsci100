@@ -40,13 +40,34 @@ knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x ) %>% #n
 
 **Training the classifier:**
 This is done through the function ``` workflow() ```
+```
+fruit_fit <- workflow() %>%
+       add_recipe(fruit_recipe) %>%
+       add_model(knn_spec) %>%
+       fit(data = fruit_train)
+```
+Note that the data set in ```fit()``` is the training set. The testing set comes into play in predict()
 
 
 
 # Individual fn's
+```
+predict()
+```
+```
+bind_cols()
+```
+```
+collect_metrics()
+metrics()
+```
 ```
 pull()
 ```
 ```
 as_numeric()
 ```
+```
+conf_mat()
+```
+
