@@ -92,6 +92,9 @@ conf_mat()
 ```
 filter(mean == max(mean))
 ```
+```
+pull()
+```
 
 
 # Chunks of code:
@@ -106,11 +109,11 @@ new_seed <- tibble(area = 12.1,
                         groove_length = 5.1)
 
 seed_data <- read_table2("data/seeds_dataset.txt")
+
 colnames(seed_data) <- c("area", "perimeter", "compactness", "length",
                         "width", "asymmetry_coefficient", "groove_length", "Category")
+                        
 seed_data_1 <- mutate(seed_data, Category = as_factor(Category))
-
-seed_data_1
 
 knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 5) %>%
     set_engine("kknn") %>%
@@ -188,7 +191,7 @@ credit_workflow <- workflow() %>%
        add_recipe(credit_recipe) %>%
        add_model(credit_spec)
 
-gridvals <- tibble(neighbors = seq(from = 1, to = 20))
+gridvals <- tibble(neighbors = seq(from = 1, to = 20)) # use k from a 1 to 20
 
 credit_results <- credit_workflow %>%
     tune_grid(resamples = credit_vfold, grid = gridvals) %>%
