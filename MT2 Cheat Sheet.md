@@ -35,7 +35,7 @@ almost always the same for K-nn analysis:
 ```r
 knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = x) %>% #neighbors = tune() for vfold
        set_engine("kknn") %>%
-       set_mode("classification")
+       set_mode("classification") # set mode to "regression" if doing K-nn regression
 ```
 
 **Training the classifier:**
