@@ -51,16 +51,16 @@ Note that the data set in ```fit()``` is the training set. The testing set comes
 **Tuning:**
 In general it is very similar to a K-nn classification where we use known # of neighbors. A chunk of code is included with the difference commented.
 ```
-number_vfold <- vfold_cv(training_set, v = 5, strata = y) **# perform  x-fold cross-validation, x = v**
+number_vfold <- vfold_cv(training_set, v = 5, strata = y) # perform  x-fold cross-validation, x = v
 
 knn_results <- workflow() %>%
        add_recipe(number_recipe) %>%
        add_model(knn_tune) %>%
-       tune_grid(resamples = number_vfold, grid = 10) %>% **# additional step compared to normal K-nn**
-       collect_metrics() **# collect the results for the tuning process, and determing which k value we shall use**
+       tune_grid(resamples = number_vfold, grid = 10) %>% # additional step compared to normal K-nn
+       collect_metrics() # collect the results for the tuning process, and determing which k value we shall use
 accuracies <- knn_results %>% 
         filter(.metric == "accuracy") %>%
-        filter(mean == max(mean)) **# to figure out which one is the most ideal model**
+        filter(mean == max(mean)) <p># to figure out which one is the most ideal model</p>
 ```
 
 
