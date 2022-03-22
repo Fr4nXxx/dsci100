@@ -29,6 +29,13 @@ fruit_recipe <- recipe(fruit_name ~ mass + color_score, data = fruit_train) %>%
     step_scale(all_predictors()) %>%
     step_center(all_predictors())
 ```
+If we want to take a look at the scaled data, the following steps are required:
+```r
+fruit_scaled <- fruit_recipe %>%
+    prep () %>%
+    bake(fruit_data)
+```
+Note that we have to specify the data frame that we want to bake (= the data set on which we can carry out our modifications in the recipe)
 
 **Model specification:**
 almost always the same for K-nn analysis:
@@ -46,7 +53,7 @@ fruit_fit <- workflow() %>%
        add_model(knn_spec) %>%
        fit(data = fruit_train)
 ```
-Note that the data set in ```fit()``` is the training set. The testing set comes into play in predict()
+Note that the data set in ```fit()``` is the training set. The testing set comes into play in predict().
 
 **Tuning:**
 In general it is very similar to a K-nn classification where we use known # of neighbors. A chunk of code is included with the difference commented.
@@ -71,18 +78,27 @@ accuracies <- knn_results %>%
 
 # Individual fn's
 ```
+prep()
+bake()
+```
+These specific fucntions are used when we want to obtain the data frame in the recepie. When using ```workflow()```, neither is necessary
+```
 predict()
 ```
+predict(workflow result, vector)
 ```
 bind_cols()
 ```
+combines a newly outputted column with the data set in the ()
 ```
 collect_metrics()
 metrics()
 ```
+```collect_metrics()``` is used for collecting results for the tuning process (= the output is for all the k values that we used in the tuning process), while ```metrics()``` is used to see how accurate our prediction is (single prediction), and also the RMSE values for regression
 ```
 pull()
 ```
+extract values in certain colomn as numerics
 ```
 as_numeric()
 ```
@@ -91,9 +107,6 @@ conf_mat()
 ```
 ```
 filter(mean == max(mean))
-```
-```
-pull()
 ```
 
 
@@ -111,7 +124,7 @@ new_seed <- tibble(area = 12.1,
 seed_data <- read_table2("data/seeds_dataset.txt")
 
 colnames(seed_data) <- c("area", "perimeter", "compactness", "length",
-                        "width", "asymmetry_coefficient", "groove_length", "Category")
+                        "width", "asymmetry_coefficient", "groove_length", "Category") # Set up the object we want to classify
                         
 seed_data_1 <- mutate(seed_data, Category = as_factor(Category))
 
@@ -128,7 +141,7 @@ seed_fit <- workflow() %>%
                 add_model(knn_spec) %>%
                 fit(data = seed_data_1)
 
-seed_predict <- predict(seed_fit, new_seed)
+seed_predict <- predict(seed_fit, new_seed) # the output of workflow can be directly used in the function ```predict()```
 ```
 
 **Classification with tuning:**
