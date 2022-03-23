@@ -127,11 +127,7 @@ seed_data <- read_table2("data/seeds_dataset.txt")
 colnames(seed_data) <- c("area", "perimeter", "compactness", "length",
                         "width", "asymmetry_coefficient", "groove_length", "Category") # Set up the object we want to classify
                         
-seed_data_1 <- mutate(seed_data, Category = 
-
-
-
-factor(Category))
+seed_data_1 <- mutate(seed_data, Category = factor(Category))
 
 knn_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 5) %>%
     set_engine("kknn") %>%
