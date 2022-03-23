@@ -79,15 +79,15 @@ accuracies <- knn_results %>%
 # Individual fn's
 ```
 prep()
-bake()
+bake(data_frame)
 ```
 These specific fucntions are used when we want to obtain the data frame in the recepie. When using ```workflow()```, neither is necessary
 ```
-predict()
+predict(data_frame, fit_model)
 ```
 predict(workflow result, vector)
 ```
-bind_cols()
+bind_cols(data_frame)
 ```
 combines a newly outputted column with the data set in the ()
 ```
@@ -112,6 +112,12 @@ filter(mean == max(mean))
 
 
 # Chunks of code:
+**Splitting the Dataset**
+```r
+marathon_split <- initial_split(marathon, prop = 0.75, strata = time_hrs)
+marathon_training <- training(marathon_split)
+marathon_testing <- testing(marathon_split)
+```
 **Classification with known # of neighbors：**
 ```r
 new_seed <- tibble(area = 12.1,
@@ -163,13 +169,16 @@ knn_results <- workflow() %>%
 
 accuracies <- knn_results %>% 
         filter(.metric == "accuracy")
-
+```
+Graphing the cross evaluation plot to figure out the best k value
+```r
 cross_val_plot <- ggplot(accuracies, aes(x = neighbors, y = mean))+
        geom_point() +
        geom_line() +
        labs(x = "Neighbors", y = "Accuracy Estimate") + 
        scale_x_continuous(breaks = seq(0, 14, by = 1)) # adjusting the x-axis
-       
+```
+```r
 mnist_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = 3) %>%
     set_engine("kknn") %>%
     set_mode("classification")
@@ -201,24 +210,22 @@ credit_recipe <- recipe(Balance ~ ., data = credit_training) %>%
 
 credit_vfold <- vfold_cv(credit_training, v = 5, strata = Balance)
 
-credit_workflow <- workflow() %>%
-       add_recipe(credit_recipe) %>%
-       add_model(credit_spec)
-
 gridvals <- tibble(neighbors = seq(from = 1, to = 20)) # use k from a 1 to 20
 
-credit_results <- credit_workflow %>%
-    tune_grid(resamples = credit_vfold, grid = gridvals) %>%
-    collect_metrics() 
+credit_results<- workflow() %>%
+       add_recipe(credit_recipe) %>%
+       add_model(credit_spec) %>%
+       tune_grid(resamples = credit_vfold, grid = gridvals) %>%
+       collect_metrics() 
 ```
 Up to this step, it is very similar compared to how we do a classification! The main difference is that we are using the "regression" mode of in our specification instead of classification.
-```
+```r
 credit_min <- credit_results %>%
     filter(.metric == "rmse") %>%
-    filter (mean == min(mean)) 
+    filter(mean == min(mean)) 
 
 k_min <- credit_min %>%
-    pull(neighbors) # up to this step, we managed to choose the ideal # of neighbors that we are going to use for the regression as k_min
+    pull(neighbors) # We managed to choose the ideal # of neighbors that we are going to use for the regression as k_min
 
 credit_best_spec <- nearest_neighbor(weight_func = "rectangular", neighbors = k_min) %>%
           set_engine("kknn") %>%
@@ -236,5 +243,5 @@ credit_summary <- credit_best_fit %>%
 
 knn_rmspe <- credit_summary %>%
     filter(.metric == "rmse") %>%
-    pull(.estimate)
+    pull(.estimate) # to get the RMSE for the prediction
 ```
