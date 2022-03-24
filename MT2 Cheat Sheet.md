@@ -73,8 +73,7 @@ accuracies <- knn_results %>%
         filter(.metric == "accuracy") %>%
         filter(mean == max(mean)) # to figure out which one is the most ideal model
 ```
-
-
+Training set and testing set: we only use the testing set when we want to do the actually prediction (with the function ```predict()```). Before this step, we only use the training set.
 
 # Individual fn's
 ```
