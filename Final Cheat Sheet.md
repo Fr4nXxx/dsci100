@@ -34,7 +34,9 @@ lm_rmse
 ```
 Getting the RMSE value - change the dataset into credit_testing for RMPSE value
 
+
 **Clustering**
+
 Scaling the data, setting the number of centers (k-value)
 ```r
 scaled_km_data<- km_data %>% 
