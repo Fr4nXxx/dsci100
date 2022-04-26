@@ -1,4 +1,4 @@
-**Linear regression**
+# Linear regression
 
 Splitting the data set
 ```r
@@ -35,7 +35,7 @@ lm_rmse
 Getting the RMSE value - change the dataset into credit_testing for RMPSE value
 
 
-**Clustering**
+# Clustering
 
 Scaling the data, setting the number of centers (k-value)
 ```r
