@@ -61,3 +61,14 @@ elbow_stats <- ks %>%
     unnest(glanced)
 elbow_stats
 ```
+
+# Inference
+Sampling:
+```r
+samples_100 <- rep_sample_n(can_seniors, size = 100, reps = 1500)
+```
+Bootstrapping:
+```r
+boot1 <- one_sample %>% 
+    rep_sample_n(size = 40, replace = TRUE, reps = 1)
+```
