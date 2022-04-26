@@ -33,3 +33,29 @@ lm_rmse <- credit_fit %>%
 lm_rmse
 ```
 Getting the RMSE value - change the dataset into credit_testing for RMPSE value
+
+**Clustering**
+Scaling the data, setting the number of centers (k-value)
+```r
+scaled_km_data<- km_data %>% 
+    mutate(across(everything(), scale))
+pokemon_clusters <- kmeans(scaled_km_data, centers = 4)
+```
+Clustering plot
+```r
+Clustering_plot <- augment(pokemon_clusters, scaled_km_data) %>%
+    ggplot(aes(x = Speed, y = Defense)) +
+    geom_point(aes(color = .cluster)) +
+    labs(x = "Pokemon Speed Value", y = "Pokemon Defense Value", color = "Cluster")
+```
+Create "elbow plot" to figure out the best k value to use
+```r
+ks <- tibble(k = 1:10)
+elbow_stats <- ks %>%
+    rowwise() %>%
+    mutate(poke_clusts = list(kmeans(scaled_km_data, nstart = 10, k))) %>%
+    mutate(glanced = list(glance(poke_clusts))) %>%
+    select(-poke_clusts) %>%
+    unnest(glanced)
+elbow_stats
+```
